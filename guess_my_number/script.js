@@ -1,4 +1,4 @@
-let secretNumber = Math.trunc(Math.random()*20 + 1);
+let secretNumber = Math.trunc(Math.random() * 20 + 1);
 let score = 20;
 let highScore = 0;
 
@@ -27,7 +27,7 @@ document.querySelector(".check").addEventListener("click", () => {
   if (score > highScore) {
     highScore = score;
     document.querySelector(".highscore").textContent = highScore;
-    displayMessage("Incorrect !!!")
+    displayMessage("Incorrect !!!");
   } else if (guess !== secretNumber) {
     if (score > 1) {
       displayMessage(guess > secretNumber ? "📈 Too high!" : "📉 Too low!");
@@ -40,25 +40,16 @@ document.querySelector(".check").addEventListener("click", () => {
   }
 });
 
-
-
-document.querySelector('.again').addEventListener('click', function () {
+// Again button
+document.querySelector(".again").addEventListener("click", function () {
   score = 20;
   secretNumber = Math.trunc(Math.random() * 20) + 1;
 
-  displayMessage('Start guessing...');
-  document.querySelector('.score').textContent = score;
-  document.querySelector('.number').textContent = '?';
-  document.querySelector('.guess').value = '';
+  displayMessage("Start guessing...");
+  document.querySelector(".score").textContent = score;
+  document.querySelector(".number").textContent = "?";
+  document.querySelector(".guess").value = "";
 
-  document.querySelector('body').style.backgroundColor = '#222';
-  document.querySelector('.number').style.width = '15rem';
+  document.querySelector("body").style.backgroundColor = "#222";
+  document.querySelector(".number").style.width = "15rem";
 });
-
-
-
-
-// Again Button
-// document.querySelector(".again").addEventListener("click", ()=>{
-
-// })
