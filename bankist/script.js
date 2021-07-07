@@ -44,26 +44,34 @@ const labelSumOut = document.querySelector('.summary__value--out');
 const labelSumInterest = document.querySelector('.summary__value--interest');
 const labelTimer = document.querySelector('.timer');
 
+// Container
 const containerApp = document.querySelector('.app');
 const containerMovements = document.querySelector('.movements');
 
+// Button
 const btnLogin = document.querySelector('.login__btn');
 const btnTransfer = document.querySelector('.form__btn--transfer');
 const btnLoan = document.querySelector('.form__btn--loan');
 const btnClose = document.querySelector('.form__btn--close');
 const btnSort = document.querySelector('.btn--sort');
 
+// Input
 const inputLoginUsername = document.querySelector('.login__input--user');
 const inputLoginPin = document.querySelector('.login__input--pin');
+
 const inputTransferTo = document.querySelector('.form__input--to');
 const inputTransferAmount = document.querySelector('.form__input--amount');
 const inputLoanAmount = document.querySelector('.form__input--loan-amount');
+
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const calcDisplayMovements = acc => {
+const calcDisplayMovements = (acc, sort = false) => {
   containerMovements.innerHTML = '';
-  acc.movements.forEach((movement, index) => {
+
+  const movs = sort ? acc.movements.slice().sort((a, b) => a - b) : acc.movements;
+
+  movs.forEach((movement, index) => {
     const type = movement > 0 ? 'deposit' : 'withdrawal';
     const html = `
       <div class="movements__row">
@@ -115,9 +123,9 @@ const createUsernames = accs => {
   });
 };
 
+// Event Handler
 createUsernames(accounts);
 
-// Event Handler
 let currentAccount;
 
 const updateUI = acc => {
@@ -154,7 +162,7 @@ btnLogin.addEventListener('click', event => {
 });
 
 btnTransfer.addEventListener('click', event => {
-  event.preventDefault();
+  event.preventDefault(); // prevent reset page
   const amount = Number(inputTransferAmount.value);
   const receiveAcc = accounts.find(
     acc => acc.username === inputTransferTo.value
@@ -174,6 +182,20 @@ btnTransfer.addEventListener('click', event => {
   }
 });
 
+btnLoan.addEventListener('click', event => {
+  event.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    // Add movement
+    currentAccount.movements.push(amount);
+
+    // update UT
+    updateUI(currentAccount);
+  }
+  inputLoanAmount.value = '';
+});
+
 btnClose.addEventListener('click', event => {
   event.preventDefault();
   if (
@@ -187,4 +209,11 @@ btnClose.addEventListener('click', event => {
     containerApp.style.opacity = 0;
   }
   inputCloseUsername.value = inputClosePin.value = '';
+});
+
+let sorted = false
+btnSort.addEventListener('click', event => {
+  event.preventDefault();
+  calcDisplayMovements(currentAccount, !sorted);
+  sorted = !sorted
 });
